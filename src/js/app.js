@@ -19,6 +19,10 @@ var main = new UI.Card({
   // subtitle: '',
   body: 'Press select button and speak',
   subtitleColor: 'indigo', // Named colors
+  // action: {
+  //   select: 'images/logo-for-pebble-translator.png',
+  //   backgroundColor: 'white'
+  // }
   // bodyColor: '#9a0036' // Hex colors
 });
 
