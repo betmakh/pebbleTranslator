@@ -8,9 +8,9 @@ var UI = require('ui');
 var Settings = require('settings');
 var Voice = require('ui/voice');
 var ajax = require('ajax');
-var selectedLang = 0;
 var translationAPIKey = 'trnsl.1.1.20170106T151741Z.c93dea41a166c3cb.2465ae22813d3ed317e51dc820966656f665dd67';
-var selectedLang = Settings.data('selectedLang') || {code: 'ru'};
+var selectedLang = Settings.data('selectedLang') || { code: 'ru' };
+var inputedText = '';
 
 var main = new UI.Card({
   subtitle: 'English translator (en-' + selectedLang.code + ')',
@@ -63,25 +63,30 @@ function getLangsList() {
   });
 }
 
+function updateTranslation(text) {
+  selectedLang = Settings.data('selectedLang');
+  var url = 'https://translate.yandex.net/api/v1.5/tr.json/translate?key=' + translationAPIKey +
+    '&text=' + text + '&lang=en-' + selectedLang.code;
+  main.subtitle('You said: ' + text);
+
+  ajax({
+    url: url,
+    method: 'post'
+  }, function(data) {
+    data = JSON.parse(data);
+    main.body('(' + selectedLang.code + ') ' + data.text.join('\n'));
+  }, function(err) {
+    console.log(err);
+  });
+}
+
 var startListen = function() {
   Voice.dictate('start', false, function(e) {
-    selectedLang = Settings.data('selectedLang');
     if (e.err) {
       console.log('Error: ' + e.err);
       return;
     }
-    var url = 'https://translate.yandex.net/api/v1.5/tr.json/translate?key=' + translationAPIKey
-      + '&text=' + e.transcription + '&lang=en-' + selectedLang.code;
-    main.subtitle('You said: ' + e.transcription);
-    ajax({
-      url: url,
-      method: 'post'
-    }, function(data) {
-      data = JSON.parse(data);
-      main.body('(' + selectedLang.code + ') ' + data.text.join('\n'));
-    }, function(err) {
-      console.log(err);
-    });
+    updateTranslation(inputedText = e.transcription);
   });
 };
 
@@ -101,6 +106,7 @@ main.on('longClick', 'select', function(e) {
   var menu = new UI.Menu({
     // backgroundColor: 'black',
     // textColor: 'blue',
+    highlightBackgroundColor: 'indigo',
     // highlightBackgroundColor: 'blue',
     // highlightTextColor: 'black',
     sections: [{
@@ -112,6 +118,7 @@ main.on('longClick', 'select', function(e) {
   menu.on('select', function(e) {
     Settings.data('selectedLang', langsData[e.itemIndex]);
     main.subtitle('English translator (en-' + langsData[e.itemIndex].code + ')');
+    updateTranslation(inputedText);
     menu.hide();
   });
   menu.show();
