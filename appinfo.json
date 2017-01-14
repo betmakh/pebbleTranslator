@@ -29,9 +29,14 @@
                 "type": "font"
             },
             {
-                "file": "images/icon",
+                "file": "images/logo-for-pebble-translator.png",
+                "name": "IMAGES_LOGO_FOR_PEBBLE_TRANSLATOR_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/british-flag-medium.png",
                 "menuIcon": true,
-                "name": "IMAGES_ICON",
+                "name": "IMAGES_BRITISH_FLAG_MEDIUM_PNG",
                 "type": "png"
             }
         ]
