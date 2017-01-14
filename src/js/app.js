@@ -36,7 +36,7 @@ main.show();
 getLangsList();
 
 function getLangsList() {
-  selectedLang = Settings.data('selectedLang');
+  selectedLang = Settings.data('selectedLang') || selectedLang;
   var url = 'https://translate.yandex.net/api/v1.5/tr.json/getLangs?key=' +
     translationAPIKey + '&ui=en';
   ajax({
@@ -74,7 +74,7 @@ function getLangsList() {
 }
 
 function updateTranslation(text) {
-  selectedLang = Settings.data('selectedLang');
+  selectedLang = Settings.data('selectedLang') || selectedLang;
   var url = 'https://translate.yandex.net/api/v1.5/tr.json/translate?key=' + translationAPIKey +
     '&text=' + text + '&lang=en-' + selectedLang.code;
   main.subtitle('You said: ' + text);
