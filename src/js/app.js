@@ -11,15 +11,25 @@ var ajax = require('ajax');
 var translationAPIKey = 'trnsl.1.1.20170106T151741Z.c93dea41a166c3cb.2465ae22813d3ed317e51dc820966656f665dd67';
 var selectedLang = Settings.data('selectedLang') || { code: 'ru' };
 var inputedText = '';
+var colors = {
+  white: '#E8DAE2',
+  black: '#210013',
+  indigo: '#DF65AA',
+  indigoDark: '#882D60'
+}
 
 var main = new UI.Card({
   subtitle: 'English translator (en-' + selectedLang.code + ')',
   scrollable: true,
   // icon: 'images/menu_icon.png',
   // subtitle: '',
-  body: 'Press select button and speak',
-  subtitleColor: 'indigo', // Named colors
-  // bodyColor: '#9a0036' // Hex colors
+  body: 'Press select to speak / hold for lang change',
+  subtitleColor: colors.indigoDark, // Named colors
+  // action: {
+  //   select: 'images/logo-for-pebble-translator.png',
+  //   backgroundColor: 'white'
+  // }
+  bodyColor: colors.black // Hex colors
 });
 
 main.show();
@@ -105,10 +115,10 @@ main.on('longClick', 'select', function(e) {
   });
   var menu = new UI.Menu({
     // backgroundColor: 'black',
-    // textColor: 'blue',
-    highlightBackgroundColor: 'indigo',
+    textColor: colors.black,
+    highlightBackgroundColor: colors.indigo,
     // highlightBackgroundColor: 'blue',
-    // highlightTextColor: 'black',
+    highlightTextColor: colors.white,
     sections: [{
       title: 'Select your language',
       items: formattedMenuData
@@ -117,7 +127,7 @@ main.on('longClick', 'select', function(e) {
 
   menu.on('select', function(e) {
     Settings.data('selectedLang', langsData[e.itemIndex]);
-    main.subtitle('English translator (en-' + langsData[e.itemIndex].code + ')');
+    main.subtitle('English translator\n(en-' + langsData[e.itemIndex].code + ')');
     updateTranslation(inputedText);
     menu.hide();
   });
